@@ -1,0 +1,492 @@
+﻿Build1=Default,b4a.xChartsDemo
+File1=Main.bal
+FileGroup1=Default Group
+Group=Default Group
+Library1=core
+Library2=xui
+Library3=bitmapcreator
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~
+Module1=Starter
+Module2=|relative|..\B4J\xChart
+NumberOfFiles=1
+NumberOfLibraries=3
+NumberOfModules=2
+Version=9.8
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: xChartsDemo
+	#VersionCode: 1
+	#VersionName: 
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+	
+	#LibraryName: xCharts
+	#LibraryVersion: 5.5
+	#LibraryAuthor: Klaus CHRISTL (klaus)
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+#End Region
+
+Sub Process_Globals
+	Private tmrDynamic As Timer
+End Sub
+
+Sub Globals
+	Private xui As XUI
+	Private PieChart1 As xChart
+	Private LineChart1, LineChart2 As xChart
+	Private BarChart1, BarChart2 As xChart
+	Private StackedBarChart1 As xChart
+	Private YXChart1 As xChart
+	Private DynamicLines1 As xChart
+	Private SingleLine1 As xChart
+	Private ReadingsToShow = 10 As Int
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("Main")
+	
+	tmrDynamic.Initialize("tmrDynamic", 1000)
+
+	CreatePieData
+	CreateLineChart1Data
+	CreateBarData
+	CreateStackedBarData
+	CreateSingleBarData
+	CreateLineChart2Data
+	CreateYXChartData
+	CreateDynamicData
+	CreateSingleLineChartData
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Private Sub CreatePieData
+	PieChart1.ClearData
+	
+	Private i, Values(4) As Int
+	
+'	PieChart1.PiePercentageNbFractions = 1
+	
+	For i = 0 To 3
+		Values(i) = Rnd(50, 501)
+	Next
+	PieChart1.AddPie("Slice #1", Values(0), xui.Color_Blue) '0 = random color
+	PieChart1.AddPie("Slice #2", Values(1), xui.Color_Red)
+	PieChart1.AddPie("Slice #3", Values(2), xui.Color_Yellow)
+	PieChart1.AddPie("Slice #4", Values(3), xui.Color_Cyan)
+	
+	PieChart1.DrawChart
+End Sub
+
+Private Sub CreateLineChart1Data
+	' Initialize the line data
+	LineChart1.ClearData
+	LineChart1.AddLine("Random", xui.Color_Blue) '0 = random color
+	LineChart1.AddLine("Cos", xui.Color_Red)
+	LineChart1.AddLine("Sin", xui.Color_Magenta)
+	
+	' Add the line points.
+	Dim Ampl1, Ampl2, Ampl3 As Double
+	Ampl1 = Rnd(1, 10001) / 500
+	Ampl2 = Rnd(1, 10001) / 500
+	Ampl3 = Rnd(1, 10001) / 5002
+	For i = 0 To 490
+		' In the case of 2 lines or more we are adding an array of values.
+		' One for each line.
+		' Make sure to create an array for each point.
+		' You cannot reuse a single array for all points.
+		LineChart1.AddLineMultiplePoints(i, Array As Double(Rnd(-100, 101) / 300 * Ampl1 + 5, Ampl2 * CosD(3 * i) + 2, Ampl3 * SinD(i) + 4), i Mod 90 = 0)
+	Next
+	LineChart1.Title = "Three graphs"
+	LineChart1.XAxisName = "Degrees"
+	LineChart1.YAxisName = "Values"
+'	LineChart1.YAxisName = ""
+'	LineChart1.IncludeLegend = False
+	LineChart1.YScaleMaxValue = 1
+	LineChart1.YScaleMinValue = -1
+	LineChart1.AutomaticScale = True
+'	LineChart1.AutomaticScale = False
+'	LineChart1.XScaleTextOrientation = "VERTICAL"
+	LineChart1.XScaleTextOrientation = "45 DEGREES"
+
+	LineChart1.DrawChart
+End Sub
+
+Private Sub CreateLineChart2Data
+	LineChart2.ClearData
+	
+	LineChart2.AddLine2("Random", xui.Color_Blue, 2dip, "RHOMBUS", False, xui.Color_Blue)
+	LineChart2.AddLine2("Cos", xui.Color_Red, 3dip, "CIRCLE", False, xui.Color_Red)
+	LineChart2.AddLine2("Sin", xui.Color_Magenta, 3dip, "SQUARE", False, xui.Color_Magenta)
+'	LineChart2.AddLine2("Random", xui.Color_Blue, 2dip, "RHOMBUS", False, xui.Color_Red)
+'	LineChart2.AddLine2("Cos", xui.Color_Red, 3dip, "CROSS+", False, xui.Color_Black)
+'	LineChart2.AddLine2("Sin", xui.Color_Magenta, 3dip, "CROSSX", False, xui.Color_Black)
+	
+	' Add the line points.
+	Dim Ampl1, Ampl2, Ampl3 As Double
+	'random amplidud	
+'	Ampl1 = Rnd(1, 10001) / 500
+'	Ampl2 = Rnd(1, 10001) / 500
+'	Ampl3 = Rnd(1, 10001) / 5002
+	
+	'fixed amplitudes to compare different scales
+	Ampl1 = 9.5
+	Ampl2 = 78
+	Ampl3 = 23
+
+	For i = 0 To 720 Step 45
+		' In the case of 2 lines or more we are adding an array of values.
+		' One for each line.
+		' Make sure to create an array for each point.
+		' You cannot reuse a single array for all points.
+		LineChart2.AddLineMultiplePoints(i, Array As Double(Rnd(-100, 101) / 300 * Ampl1 + 5, Ampl2 * CosD(i) + 2, Ampl3 * SinD(i) + 4), i Mod 90 = 0)
+	Next
+	LineChart2.Title = "Three graphs"
+	LineChart2.XAxisName = "Degrees"
+	LineChart2.YAxisName = "Values"
+'	LineChart2.YAxisName = ""
+'	LineChart2.IncludeLegend = False
+
+	LineChart2.DrawChart
+End Sub
+
+Private Sub CreateBarData
+	' set the bar colors
+	BarChart1.ClearData
+	BarChart1.AddBar("Bar 1", xui.Color_Red)
+	BarChart1.AddBar("Bar 2", xui.Color_Blue)
+	BarChart1.AddBar("Bar 3", xui.Color_Green)
+	BarChart1.AddBar("Bar 4", xui.Color_Yellow)
+	BarChart1.AddBar("Bar 5", xui.Color_Magenta)
+'	BarChart1.XScaleTextOrientation = "VERTICAL"
+	BarChart1.XScaleTextOrientation = "45 DEGREES"
+
+	' Add the items.
+	For i = 0 To 8
+		BarChart1.AddBarMultiplePoint(2005 + i, Array As Double(Rnd(-1000, 500), Rnd(-1000, 500), Rnd(-1000, 500), Rnd(-1000, 500)))
+	Next
+	
+	BarChart1.DrawChart
+End Sub
+
+Private Sub CreateStackedBarData
+	' set the bar colors
+	StackedBarChart1.ClearData
+	StackedBarChart1.AddBar("Bar 1", xui.Color_Red)
+	StackedBarChart1.AddBar("Bar 2", xui.Color_Blue)
+	StackedBarChart1.AddBar("Bar 3", xui.Color_Green)
+	StackedBarChart1.AddBar("Bar 4", xui.Color_Yellow)
+	StackedBarChart1.XScaleTextOrientation = "VERTICAL"
+'	StackedBarChart1.LegendTextSize = 20
+'	StackedBarChart1.ChartType = "BAR"
+	
+	' Add the items.
+	For i = 0 To 8
+		StackedBarChart1.AddBarMultiplePoint(2005 + i, Array As Double(Rnd(0, 1000), Rnd(0, 1000), Rnd(0, 1000), Rnd(0, 1000)))
+	Next
+	
+	StackedBarChart1.DrawChart
+End Sub
+
+Private Sub CreateSingleBarData
+	' set the bar color
+	BarChart2.ClearData
+	BarChart2.AddBar("Bar 1", xui.Color_Red)
+	BarChart2.XScaleTextOrientation = "VERTICAL"
+	BarChart2.BarValueOrientation = "VERTICAL"
+	BarChart2.ChartBackgroundColor = xui.Color_Black
+	BarChart2.GridFrameColor = xui.Color_Yellow
+	BarChart2.GridColor = xui.Color_White
+	BarChart2.ScaleTextColor = xui.Color_Yellow
+	BarChart2.SetBarMeanValueFormat(1, 2, 2, False)
+	BarChart2.Subtitle = "in million $"
+	BarChart2.SubitleTextColor = xui.Color_Gray
+	' Add the items.
+	For i = 0 To 10
+		BarChart2.AddBarPointData(2005 + i, Rnd(-1000, 1500))
+	Next
+	BarChart2.DrawChart
+End Sub
+
+Private Sub CreateYXChartData
+	' set the line properties
+	YXChart1.ClearData
+	
+	Private Lissajou = True As Boolean 'set it to False to generate another chart
+	
+'	If Lissajou = True Then
+	If Lissajou = False Then
+
+	YXChart1.AddYXLine2("Example1", xui.Color_Red, 2dip, True, "CIRCLE", False, xui.Color_Red)
+	YXChart1.AddYXLine("Example2", xui.Color_Blue, 2dip)
+	YXChart1.AddYXLine2("OnlyPoints", xui.Color_Green, 2dip, False, "SQUARE", True, xui.Color_Green)
+	YXChart1.XScaleTextOrientation = "VERTICAL"
+	YXChart1.ChartBackgroundColor = xui.Color_White
+	YXChart1.GridFrameColor = xui.Color_Black
+	YXChart1.GridColor = xui.Color_Gray
+	YXChart1.TitleTextColor = xui.Color_Black
+	YXChart1.ScaleTextColor = xui.Color_Black
+	YXChart1.DisplayValues = False
+	YXChart1.YScaleMaxValue = 75
+	YXChart1.YScaleMinValue = -75
+	YXChart1.XScaleMaxValue = 75
+	YXChart1.XScaleMinValue = -75
+	
+		'add the points
+		'these are Lissajou curves
+		Private x1, y1, x2, y2, z1, z2 As Double
+		Private n, n1 As Int
+		z1 = Rnd(1, 6)
+		z2 = Rnd(1, 6)
+	
+		n = 72
+		n1 = 360 / n
+		For i = 0 To n
+			x1 = 90 * CosD(n1 * i)
+			y1 = 90 * SinD(z1 * n1 * i)
+			YXChart1.AddYXPoint(0, x1, y1)
+			x2 = 90 * CosD(z2 * n1 * i)
+			y2 = 90 * SinD(n1 * i)
+			YXChart1.AddYXPoint(1, x2, y2)
+			If i > 10 And i < 20 Then
+				YXChart1.AddYXPoint(2, Rnd(-90, 90), Rnd(-90, 90))
+			End If
+		Next
+	
+	Else
+		' test for the question here:
+		' https://www.b4x.com/android/forum/threads/b4x-xui-xchart-class.91830/page-9#post-637309
+		YXChart1.XAxisName = "Testy"
+		YXChart1.YAxisName = "Testx"
+'		YXChart1.AutomaticScale = True
+		YXChart1.AddYXLine2("Test", xui.Color_Red, 2dip, True, "CIRCLE", False, xui.Color_Red)
+		YXChart1.AddYXLine2("Test+", xui.Color_Blue, 2dip, True, "CIRCLE", False, xui.Color_Blue)
+		YXChart1.AddYXLine2("Test-", xui.Color_Blue, 2dip, True, "CIRCLE", False, xui.Color_Blue)
+		YXChart1.XScaleTextOrientation = "VERTICAL"
+		YXChart1.ChartBackgroundColor = xui.Color_White
+		YXChart1.GridFrameColor = xui.Color_Black
+		YXChart1.GridColor = xui.Color_Gray
+		YXChart1.TitleTextColor = xui.Color_Black
+		YXChart1.ScaleTextColor = xui.Color_Black
+		YXChart1.DisplayValues = False
+		YXChart1.YScaleMaxValue = 5
+		YXChart1.YScaleMinValue = -5
+		YXChart1.XScaleMaxValue = 3000
+		YXChart1.XScaleMinValue = 0
+
+		'result
+		YXChart1.AddYXPoint(0, 0, 0)
+		YXChart1.AddYXPoint(0, 200, 0.4)
+		YXChart1.AddYXPoint(0, 400, 0.5)
+		YXChart1.AddYXPoint(0, 600, 0.5)
+		YXChart1.AddYXPoint(0, 800, 1.0)
+		YXChart1.AddYXPoint(0, 1000, 1.4)
+		YXChart1.AddYXPoint(0, 1200, 1.6)
+		YXChart1.AddYXPoint(0, 1400, -1)
+		YXChart1.AddYXPoint(0, 1600, -1.2)
+		YXChart1.AddYXPoint(0, 1800, -1.2)
+		YXChart1.AddYXPoint(0, 2000, -1.6)
+		'rif1
+		YXChart1.AddYXPoint(1, 0, 1)
+		YXChart1.AddYXPoint(1, 500, 1)
+		YXChart1.AddYXPoint(1, 500, 2)
+		YXChart1.AddYXPoint(1, 2000, 2)
+		YXChart1.AddYXPoint(1, 2000, 3)
+		YXChart1.AddYXPoint(1, 3000, 3)
+		'rif2
+		YXChart1.AddYXPoint(2, 0, -1)
+		YXChart1.AddYXPoint(2, 500, -1)
+		YXChart1.AddYXPoint(2, 500, -2)
+		YXChart1.AddYXPoint(2, 2000, -2)
+		YXChart1.AddYXPoint(2, 2000, -3)
+		YXChart1.AddYXPoint(2, 3000, -3)
+	End If
+	YXChart1.DrawChart
+End Sub
+
+Private Sub CreateDynamicData
+	DynamicLines1.ClearData
+	DynamicLines1.AddLine2("Speed", xui.Color_Red, 2dip, "CIRCLE", False, xui.Color_Red)
+	DynamicLines1.AddLine2("Direction", xui.Color_Blue, 2dip, "SQUARE", True, xui.Color_Blue)
+End Sub
+
+Private Sub DrawDynamicLinePoints
+	Private Speed, Direction As Double
+	
+	DateTime.TimeFormat = "HH:mm:ss"
+		
+	Private ElapsedTime As String
+	ElapsedTime=DateTime.Time( DateTime.Now)		'time in seconds
+				
+	Speed = Rnd(0, 60)
+	Direction = Rnd(0, 360)
+	
+	If DynamicLines1.NbPoints = ReadingsToShow Then
+		DynamicLines1.RemovePointData(0)
+	End If
+		
+	DynamicLines1.AddLineMultiplePoints(ElapsedTime, Array As Double(Speed,Direction), True)
+	DynamicLines1.DrawChart
+End Sub
+
+Private Sub CreateSingleLineChartData
+	' Initialize the single line data
+	SingleLine1.ClearData
+  
+	SingleLine1.Title = "Single line graph"
+	SingleLine1.XAxisName = "Year"
+	SingleLine1.YAxisName = "Values"
+	'    SingleLine1.YAxisName = ""
+	'    SingleLine1.IncludeLegend = False
+	SingleLine1.IncludeLegend = "BOTTOM"
+	SingleLine1.AutomaticScale = True
+	SingleLine1.YZeroAxis=False
+	SingleLine1.XScaleTextOrientation = "VERTICAL"
+	SingleLine1.AddLine("Test line", xui.Color_Blue)
+  
+	Private vl As List= Array As Double(Rnd(0, 60),Rnd(0, 60),Rnd(0, 60),Rnd(0, 60),Rnd(0, 60),Rnd(0, 60),Rnd(0, 60),Rnd(0, 60),Rnd(0, 60),Rnd(0, 60),Rnd(0, 60))
+ 
+	For i = 0 To vl.Size-1
+		SingleLine1.AddLineMultiplePoints(2005+i, Array As Double(vl.Get(i)),True)
+	Next
+	SingleLine1.DrawChart
+End Sub
+
+Private Sub btnLinePieCharts_Click
+	CreatePieData
+	PieChart1.Visible = True
+
+	LineChart1.ClearData
+	CreateLineChart1Data
+	LineChart1.Visible = True
+
+	BarChart1.Visible = False
+	BarChart2.Visible = False
+	StackedBarChart1.Visible = False
+	LineChart2.Visible = False
+	YXChart1.Visible = False
+	DynamicLines1.Visible = False
+	SingleLine1.Visible = False
+End Sub
+
+Private Sub btnBarCharts_Click
+	CreateBarData
+	BarChart1.Visible = True
+	
+	StackedBarChart1.ClearData
+	CreateStackedBarData
+	StackedBarChart1.Visible = True
+	
+	PieChart1.Visible = False
+	LineChart1.Visible = False
+	BarChart2.Visible = False
+	LineChart2.Visible = False
+	YXChart1.Visible = False
+	DynamicLines1.Visible = False
+	SingleLine1.Visible = False
+End Sub
+
+Private Sub btnBarChart_Click
+	CreateSingleBarData
+	BarChart2.Visible = True
+
+	StackedBarChart1.Visible = False
+	PieChart1.Visible = False
+	LineChart1.Visible = False
+	BarChart1.Visible = False
+	LineChart2.Visible = False
+	YXChart1.Visible = False
+	DynamicLines1.Visible = False
+	SingleLine1.Visible = False
+End Sub
+
+Private Sub btnLineChart_Click
+	LineChart2.DifferentScales = Not(LineChart2.DifferentScales)
+	CreateLineChart2Data
+	LineChart2.Visible = True
+
+	BarChart2.Visible = False
+	StackedBarChart1.Visible = False
+	PieChart1.Visible = False
+	LineChart1.Visible = False
+	BarChart1.Visible = False
+	YXChart1.Visible = False
+	DynamicLines1.Visible = False
+	SingleLine1.Visible = False
+End Sub
+
+Private Sub btnYXChart_Click
+	CreateYXChartData
+	YXChart1.Visible = True
+	
+	BarChart2.Visible = False
+	StackedBarChart1.Visible = False
+	PieChart1.Visible = False
+	LineChart1.Visible = False
+	BarChart1.Visible = False
+	LineChart2.Visible = False
+	DynamicLines1.Visible = False
+	SingleLine1.Visible = False
+	
+	Private bmp As B4XBitmap
+	Private Out As OutputStream
+	xui.SetDataFolder("ChartsDemo")
+	Out = File.OpenOutput(xui.DefaultFolder, "Test.jpg", False)
+'	Log(xui.DefaultFolder)
+	bmp = YXChart1.Snapshot
+	bmp.WriteToStream(Out, 100, "JPEG")
+	Out.Close
+End Sub
+
+Private Sub btnDynamicLines_Click
+	tmrDynamic.Enabled = True
+	DrawDynamicLinePoints
+	DynamicLines1.Visible = True
+	
+	BarChart2.Visible = False
+	StackedBarChart1.Visible = False
+	PieChart1.Visible = False
+	LineChart1.Visible = False
+	BarChart1.Visible = False
+	LineChart2.Visible = False
+	YXChart1.Visible = False
+	SingleLine1.Visible = False
+End Sub
+
+Private Sub btnSingleLine_Click
+	CreateSingleLineChartData
+	SingleLine1.Visible = True
+	
+	BarChart2.Visible = False
+	StackedBarChart1.Visible = False
+	PieChart1.Visible = False
+	LineChart1.Visible = False
+	BarChart1.Visible = False
+	LineChart2.Visible = False
+	YXChart1.Visible = False
+	DynamicLines1.Visible = False
+
+	tmrDynamic.Enabled = False
+End Sub
+
+Private Sub tmrDynamic_Tick
+	If DynamicLines1.Visible = False Then
+		tmrDynamic.Enabled = False
+	End If
+	DrawDynamicLinePoints
+End Sub
+
+Private Sub YXChart1_Touch(X As  Double, Y As Double)
+	Log(X & " / " & Y)
+End Sub
