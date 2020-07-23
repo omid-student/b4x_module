@@ -32,7 +32,7 @@ Module9=Share
 NumberOfFiles=0
 NumberOfLibraries=16
 NumberOfModules=12
-Version=9.8
+Version=10
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: B4A Example

@@ -54,7 +54,7 @@ Public Sub Initialize(Keysize As Int,PublicKey As String,PrivateKey As String)
 
 End Sub
 
-'return result as base64
+'return output as base64
 Public Sub Encrypt(Data As String) As String
 	
 	MessageBytes = Bconv.StringToBytes(Data, "UTF8")
