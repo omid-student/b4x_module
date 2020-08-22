@@ -372,3 +372,27 @@ Sub IsEqualInt(Num1 As Int,Num2 As Int) As Boolean
 	End Try
 	
 End Sub
+
+Sub ValidateFields(Panel As B4XView) As Boolean
+	
+	For Each v1 As B4XView In Panel.GetAllViewsRecursive
+		
+		#if B4a
+		If v1 Is EditText Then
+			If 	v1.Text.Trim.Length = 0 Then
+				Return False
+			End If
+		End If
+		#else
+		If v1 Is TextField Then
+			If 	v1.Text.Trim.Length = 0 Then
+				Return False
+			End If
+		End If
+		#end if
+		
+	Next
+	
+	Return True
+	
+End Sub

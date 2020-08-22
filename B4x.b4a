@@ -18,20 +18,21 @@ Library8=phone
 Library9=contentresolver
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.DarkTheme)~\n~'End of default text.~\n~
 Module1=AES
-Module10=Starter
-Module11=Strings
-Module12=Validation
+Module10=Share
+Module11=Starter
+Module12=Strings
+Module13=Validation
 Module2=Application
 Module3=Base64Image
 Module4=Conversion
 Module5=FileFolder
-Module6=JSON
-Module7=PictureChooser
-Module8=RSA
-Module9=Share
+Module6=Glide
+Module7=JSON
+Module8=PictureChooser
+Module9=RSA
 NumberOfFiles=0
 NumberOfLibraries=16
-NumberOfModules=12
+NumberOfModules=13
 Version=10
 @EndOfDesignText@
 #Region  Project Attributes 

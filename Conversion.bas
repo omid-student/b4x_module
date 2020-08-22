@@ -929,7 +929,7 @@ Public Sub GetDateTimeFromTick(Tick As Long) As String
 	Return DateTime.Date(Tick) & " " & DateTime.Time(Tick)
 End Sub
 
-Sub ConvertMillisecondsToString(t As Long,HourSeprator As String,MinuteSeprator As String) As String
+Sub ConvertMillisecondsToString(t As Long,DaySeprator As String,HourSeprator As String,MinuteSeprator As String,SecondSeprator As String) As String
 	
 	Try
 		Dim DayS,HourS, MinuteS, SecondS As Int
@@ -939,11 +939,11 @@ Sub ConvertMillisecondsToString(t As Long,HourSeprator As String,MinuteSeprator 
 		SecondS = (t Mod DateTime.TicksPerMinute) / DateTime.TicksPerSecond
 		
 		If HourS < 1 And MinuteS > 0 Then
-			Return $"${MinuteS}${MinuteSeprator}$2.0{SecondS}"$
+			Return $"${MinuteS}${MinuteSeprator}$2.0{SecondS}${SecondSeprator}"$
 		Else If HourS < 1 And MinuteS < 1 Then
-			Return $"0:${SecondS}"$
+			Return $"${SecondS}${SecondSeprator}"$
 		Else
-			Return $"$1.0{HourS}${HourSeprator}$2.0{MinuteS}${MinuteSeprator}$2.0{SecondS}"$
+			Return $"$1.0{HourS}${HourSeprator}$2.0{MinuteS}${MinuteSeprator}$2.0{SecondS}${SecondSeprator}"$
 		End If
 		
 	Catch
@@ -1112,7 +1112,12 @@ Public Sub GregorianToPersian2(Date As String,Seprator As String,ResultAsArray A
 	
 	Dim res() As String
 	res	=	Regex.Split(" ",Date)
-	res =	Regex.Split(Seprator,res(0))
+	
+	If Date.IndexOf("-") > -1 Then
+		res =	Regex.Split("-",res(0))
+	Else
+		res =	Regex.Split("/",res(0))
+	End If
 
 	Return GregorianToPersian(res(0),res(1),res(2),Seprator,ResultAsArray)
 	

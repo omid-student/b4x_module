@@ -4,6 +4,9 @@ ModulesStructureVersion=1
 Type=Class
 Version=9.8
 @EndOfDesignText@
+#Event: Result(Bitmap As Bitmap)
+#Event: Result2(Dir As String,Filename As String)
+
 #if b4i
 Private Sub Class_Globals
 	Private media As Camera
@@ -34,9 +37,6 @@ End Sub
 '#PlistExtra:<key>NSCameraUsageDescription</key><string>Taking a photo.</string>
 '#PlistExtra:<key>NSMicrophoneUsageDescription</key><string>Record video.</string>
 '
-'Events:
-'Result(Bitmap As Bitmap)
-'Result2(Dir As String,Filename As String)
 
 Public Sub Initialize(Parent As Panel,Module As Object,EventResult As String) As PictureChooser
 	
@@ -397,10 +397,7 @@ End Sub
 '    android:name="com.yalantis.ucrop.UCropActivity"
 '    android:screenOrientation="portrait"
 '    android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>)
-'</code>
 '
-'add below code to manifest
-'<code>
 'AddApplicationText(
 '  <provider
 '  android:name="android.support.v4.content.FileProvider"
