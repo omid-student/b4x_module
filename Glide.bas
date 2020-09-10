@@ -7,6 +7,7 @@ Version=10
 Private Sub Class_Globals
 	Private http As HttpJob
 	Private w_,h_,radius_ As Int
+	Dim h As Hitex_Glide
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -25,28 +26,12 @@ End Sub
 
 Public Sub IntoImageview(Url As String,Img As B4XView)
 	
-	http.Download(Url)
+	Img.Tag	=	Null
 	
-	Wait For JobDone(Job As HttpJob)
-	
-		If Job.Success Then
-			
-			Dim temp As B4XBitmap
-		
-			temp	=	Job.GetBitmap
-			
-			If w_ > 0 And h_ > 0 Then
-				temp	=	temp.Resize(w_,h_,True)
-			End If
-			
-			If radius_ > 0 Then
-				temp	=	CreateRoundRectBitmap(temp,radius_)
-			End If
-			
-			Img.SetBitmap(temp)
-			
-	End If
-		
+	Dim RequestOptions As Hitex_RequestOptions
+	RequestOptions.Initialize.CenterCrop
+	h.Load2(Url).Into(Img)
+
 End Sub
 
 Private Sub CreateRoundRectBitmap (Input As B4XBitmap, Radius As Float) As B4XBitmap

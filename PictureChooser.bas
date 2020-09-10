@@ -499,6 +499,7 @@ Private Sub btncropDo_Click
 	p2.Visible			=	True
 	
 	p2.BringToFront
+	
 	Try
 		CV.ImageBitmap		=	LoadBitmapResize(sDir,sFilename,150%x,150%y,True)
 		CurrentUserBitmap	=	LoadBitmapResize(sDir,sFilename,150%x,150%y,True)
