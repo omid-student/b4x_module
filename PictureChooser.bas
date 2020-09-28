@@ -429,7 +429,10 @@ Public Sub Initialize(Parent As Panel,Module As Object,EventResult As String) As
 	filename_	=	"temp.jpg"
 	
 	tempImageFile	=	filename_
-	imageFolder 	= 	rp.GetSafeDirDefaultExternal("cache")
+	Try
+		imageFolder 	= 	rp.GetSafeDirDefaultExternal("cache")
+	Catch
+	End Try
 	
 	If Parent = Null Then Return
 	If Parent.IsInitialized = False Then Return
