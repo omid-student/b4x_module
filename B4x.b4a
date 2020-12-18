@@ -20,23 +20,26 @@ Library8=phone
 Library9=contentresolver
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.DarkTheme)~\n~'End of default text.~\n~
 Module1=AES
-Module10=RSA
-Module11=Share
-Module12=Starter
-Module13=Strings
-Module14=Validation
+Module10=Lottie
+Module11=PictureChooser
+Module12=ProvinceManager
+Module13=RSA
+Module14=Share
+Module15=Starter
+Module16=Strings
+Module17=Validation
 Module2=Application
-Module3=Base64Image
-Module4=Conversion
-Module5=FileFolder
-Module6=Glide
-Module7=JSON
-Module8=PictureChooser
-Module9=ProvinceManager
+Module3=B4X
+Module4=Base64Image
+Module5=Conversion
+Module6=Downloader
+Module7=FileFolder
+Module8=Glide
+Module9=JSON
 NumberOfFiles=1
 NumberOfLibraries=16
-NumberOfModules=14
-Version=10
+NumberOfModules=17
+Version=10.2
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: B4A Example

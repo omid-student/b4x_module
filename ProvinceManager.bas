@@ -6,27 +6,19 @@ Version=10
 @EndOfDesignText@
 Private Sub Class_Globals
 	Private sql_ As SQL
-	Type Province(Pid As Int,Title As String)
-	Type City(Pid As Int,ProvinceID As Int,Title As String)
-	Type County(Pid As Int,ProvinceID As Int,Title As String)
+	Type Province_(Pid As Int,Title As String)
+	Type City_(Pid As Int,ProvinceID As Int,Title As String)
+	Type County_(Pid As Int,ProvinceID As Int,Title As String)
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize
 	
-	Dim dir As String
-	
-	#if b4a
-	dir = File.DirInternal
-	#else
-	dir = File.DirLibrary
-	#End If
-	
-	If File.Exists(dir,"common_data.db") = False Then
-		File.Copy(File.DirAssets,"common_data.db",dir,"common_data.db")
+	If File.Exists(Configuration.Dir,"common_data.db") = False Then
+		File.Copy(File.DirAssets,"common_data.db",Configuration.Dir,"common_data.db")
 	End If
 	
-	sql_.Initialize(dir,"common_data.db",False)
+	sql_.Initialize(Configuration.Dir,"common_data.db",False)
 	
 End Sub
 
@@ -40,7 +32,7 @@ Public Sub GetProvinces As List
 	
 	Do While rs.NextRow
 		
-		Dim t As Province
+		Dim t As Province_
 		t.Initialize
 		t.Pid	=	rs.GetInt("pid")
 		t.Title	=	rs.GetString("title")
@@ -63,7 +55,7 @@ Public Sub GetCities(ProvinceID As Int) As List
 	
 	Do While rs.NextRow
 		
-		Dim t As City
+		Dim t As City_
 		t.Initialize
 		t.Pid			=	rs.GetInt("pid")
 		t.Title			=	rs.GetString("title")
@@ -87,7 +79,7 @@ Public Sub GetCounties(ProvinceID As Int) As List
 	
 	Do While rs.NextRow
 		
-		Dim t As County
+		Dim t As County_
 		t.Initialize
 		t.Pid			=	rs.GetInt("pid")
 		t.Title			=	rs.GetString("title")

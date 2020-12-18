@@ -1,5 +1,5 @@
 ﻿B4A=true
-Group=Libraries
+Group=Default Group
 ModulesStructureVersion=1
 Type=StaticCode
 Version=9.8
@@ -29,6 +29,26 @@ Sub Map2Json(Map1 As Map) As String
 End Sub
 
 Sub Json2List(Json1 As String) As List
+	
+	If Json1.StartsWith("(") And Json1.EndsWith(")") Then
+		
+		Json1 = Json1.Replace("(","").Replace(")","")
+		
+		Dim r() As String
+		r = Regex.Split(",",Json1)
+	
+		Dim ls As List
+		ls.Initialize
+		
+		For i = 0 To r.Length - 1
+			Dim s As String
+			s = r(i).Replace(" ","").Replace(CRLF,"")
+			ls.Add(s)
+		Next
+		
+		Return ls
+		
+	End If
 	
 	Try
 		Dim js As JSONParser

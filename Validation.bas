@@ -396,3 +396,15 @@ Sub ValidateFields(Panel As B4XView) As Boolean
 	Return True
 	
 End Sub
+
+Sub IssetIndex(List2 As List,Index As Int)
+	
+	For i = 0 To List2.Size - 1
+		If i = Index Then
+			Return True	
+		End If
+	Next
+	
+	Return False
+	
+End Sub

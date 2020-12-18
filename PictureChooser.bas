@@ -28,16 +28,17 @@ Private Sub Class_Globals
 	Private CurrentDirCrop,CurrentFilenameCrop As String
 	Private Chooser_Title As String : Chooser_Title	=	"انتخاب تصویر"
 	Private quality2 As Int
+	Private Dir As String = File.DirLibrary
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
 'Min version is 10
 'add below plist
+'<code>
 '#PlistExtra:<key>NSPhotoLibraryUsageDescription</key><string>Select a photo.</string>
 '#PlistExtra:<key>NSCameraUsageDescription</key><string>Taking a photo.</string>
 '#PlistExtra:<key>NSMicrophoneUsageDescription</key><string>Record video.</string>
-'
-
+'</code>
 Public Sub Initialize(Parent As Panel,Module As Object,EventResult As String) As PictureChooser
 	
 	Nav		= Main.NavControl
@@ -65,31 +66,31 @@ Public Sub SetFont(Font_ As Font) As PictureChooser
 	Return Me
 End Sub
 
-Public Sub setChooserTitle(Value As String)
+Public Sub SetChooserTitle(Value As String)
 	Chooser_Title	=	Value
 End Sub
 
-Public Sub setRotateTitle(Value As String)
+Public Sub SetRotateTitle(Value As String)
 	
 End Sub
 
-Public Sub setSaveTitle(Value As String)
+Public Sub SetSaveTitle(Value As String)
 	
 End Sub
 
-Public Sub setCancelTitle(Value As String)
+Public Sub SetCancelTitle(Value As String)
 
 End Sub
 
-Public Sub getVisible As Boolean
+Public Sub GetVisible As Boolean
 	Return True
 End Sub
 
-Public Sub setQualityCameraPicture(Value As Int)
+Public Sub SetQualityCameraPicture(Value As Int)
 	quality2	=	Value
 End Sub
 
-Public Sub setCropTitle(Value As String)
+Public Sub SetCropTitle(Value As String)
 
 End Sub
 
@@ -115,7 +116,7 @@ Public Sub setCrop(Value As Boolean)
 	is_crop	=	Value
 End Sub
 
-Public Sub setResizedOutput(Width As Int,Height As Int)
+Public Sub SetResizedOutput(Width As Int,Height As Int)
 	sWidth	=	Width
 	sHeight	=	Height
 End Sub
@@ -126,7 +127,7 @@ Public Sub SetAspectRatio(Width As Int,Height As Int) As PictureChooser
 	Return Me
 End Sub
 
-Sub setIsCircular(Value As Boolean)
+Sub setCircular(Value As Boolean)
 	IsCircular	=	Value
 End Sub
 
@@ -134,7 +135,7 @@ Public Sub ChooseVideo
 	media.TakeVideo
 End Sub
 
-Public Sub getFilename As String
+Public Sub GetFilename As String
 	Return filename_
 End Sub
 
@@ -200,41 +201,41 @@ Public Sub ResizeBitmap(Original As Bitmap, Width As Int, Height As Int) As Bitm
 
 End Sub
 
-Public Sub ResizePicture(Dir As String, Filename As String, OutputFilename As String,Width As Int,Height As Int)
+Public Sub ResizePicture(Dir_ As String, Filename As String, OutputFilename As String,Width As Int,Height As Int)
 	
 	Dim bt As Bitmap
-	bt	=	LoadBitmap(Dir,Filename)
+	bt	=	LoadBitmap(Dir_,Filename)
 	
-	SaveBitmap(ResizeBitmap(bt,Width,Height),Dir,OutputFilename)
+	SaveBitmap(ResizeBitmap(bt,Width,Height),Dir_,OutputFilename)
 	
 End Sub
 
 'save picture with jpeg format
-Public Sub SaveBitmap(Bitmap As Bitmap,Dir As String,Filename As String)
+Public Sub SaveBitmap(Bitmap As Bitmap,Dir_ As String,Filename As String)
 	Dim b1 As Bitmap
 	Dim out As OutputStream
 	b1 = Bitmap
-	out = File.OpenOutput(Dir,Filename,False)
+	out = File.OpenOutput(Dir_,Filename,False)
 	b1.WriteToStream(out,100,"JPEG")
 	out.Close
 End Sub
 
 'save picture with png format
-Public Sub SaveBitmap2(Bitmap As Bitmap,Dir As String,Filename As String)
+Public Sub SaveBitmap2(Bitmap As Bitmap,Dir_ As String,Filename As String)
 	Dim b1 As Bitmap
 	Dim out As OutputStream
 	b1 = Bitmap
-	out = File.OpenOutput(Dir,Filename,False)
+	out = File.OpenOutput(Dir_,Filename,False)
 	b1.WriteToStream(out,100,"JPEG")
 	out.Close
 End Sub
 
-Public Sub RoundBitmap(Bitmap As Bitmap) As Bitmap
+Public Sub RoundBitmap(Bitmap As Bitmap,Corner As Int) As Bitmap
 	Return RoundBitmap3(Bitmap,Bitmap.Width/2)
 End Sub
 
-Public Sub RoundBitmap2(Bitmap As Bitmap,Corner As Int) As Bitmap
-	Return RoundBitmap3(Bitmap,Corner)
+Public Sub RoundBitmap2(Bitmap As Bitmap) As Bitmap
+	Return RoundBitmap3(Bitmap,Bitmap.Height/2)
 End Sub
 
 Private Sub RotateImageByDegrees(original As Bitmap, degree As Float) As Bitmap
@@ -248,32 +249,30 @@ Private Sub RotateImageByRadians(original As Bitmap, radians As Float) As Bitmap
 	Return original
 End Sub
 
-Private Sub RoundBitmap3(Bitmap As Bitmap,Corner As Int) As Bitmap
+Private Sub RoundBitmap3(Input As Bitmap,Radius As Int) As Bitmap
 	
-	Dim img As ImageView
-	img.Initialize("")
-	p2.RootPanel.AddView(img,-Bitmap.Width,0,Bitmap.Width,Bitmap.Height)
-	img.Bitmap = Bitmap
-	img.SetBorder(0,Colors.Transparent,Corner)
-	
-	Dim img2 As ImageView
-	img2.Initialize("")
-	p2.RootPanel.AddView(img2,-Bitmap.Width,-Bitmap.Height,Bitmap.Width,Bitmap.Height)
-	
-	Dim cvs As Canvas
-	cvs.Initialize(img)
-	Dim dest As Rect
-	dest.Initialize(0, 0, img.Width, img.Height)
-	cvs.DrawView(img2, dest)
-	cvs.Refresh
-	
-	Dim output As Bitmap
-	output = cvs.CreateBitmap
-	
-	img.RemoveViewFromParent
-	img2.RemoveViewFromParent
-	
-	Return output
+	Dim xui As XUI
+	Dim BorderColor As Int = xui.Color_Transparent
+	Dim BorderWidth As Int = 0
+	Dim c As B4XCanvas
+	Dim xview As B4XView = xui.CreatePanel("")
+	xview.SetLayoutAnimated(0, 0, 0, Input.Width, Input.Height)
+	c.Initialize(xview)
+	Dim path As B4XPath
+	path.InitializeRoundedRect(c.TargetRect, Radius)
+	c.ClipPath(path)
+	c.DrawRect(c.TargetRect, BorderColor, True, BorderWidth) 'border
+	c.RemoveClip
+	Dim r As B4XRect
+	r.Initialize(BorderWidth, BorderWidth, c.TargetRect.Width - BorderWidth, c.TargetRect.Height - BorderWidth)
+	path.InitializeRoundedRect(r, Radius - 0.7 * BorderWidth)
+	c.ClipPath(path)
+	c.DrawBitmap(Input, r)
+	c.RemoveClip
+	c.Invalidate
+	Dim res As B4XBitmap = c.CreateBitmap
+	c.Release
+	Return res
 	
 End Sub
 #end region
@@ -317,6 +316,7 @@ Private Sub page1_Resize(Width As Int,Height As Int)
 	If RatioWidth > 0 Then
 		objCrop.RatioH	=	Height
 		objCrop.RatioV	=	Width	
+		objCrop.LockAspectRatio = True
 	End If
 	
 	objCrop.ButtonCancel = ButtonCancelTitle
@@ -385,6 +385,7 @@ Private Sub Class_Globals
 	Private btnsave As Button
 	Private filename_ As String
 	Private jo As JavaObject
+	Private Dir As String
 End Sub
 
 'Note: You have to declare varible in Process_Globals
@@ -429,10 +430,13 @@ Public Sub Initialize(Parent As Panel,Module As Object,EventResult As String) As
 	filename_	=	"temp.jpg"
 	
 	tempImageFile	=	filename_
+	
 	Try
 		imageFolder 	= 	rp.GetSafeDirDefaultExternal("cache")
 	Catch
 	End Try
+	
+	sDir		= File.DirInternal
 	
 	If Parent = Null Then Return
 	If Parent.IsInitialized = False Then Return
@@ -619,7 +623,7 @@ End Sub
 Public Sub SetAspectRatio(Width As Int,Height As Int) As PictureChooser
 	CV.setAspectRatio(Width,Height)
 	CV.FixedAspectRatio = True
-	AspectRatioWidth	=	Width
+	AspectRatioWidth		=	Width
 	AspectRatioHeight	=	Height
 	Return Me
 End Sub
@@ -636,12 +640,12 @@ End Sub
 Private Sub gpu_PictureTaken (Data() As Byte)
 	
 	Dim ou As OutputStream
-	ou = File.OpenOutput(File.DirInternal,filename_,False)
+	ou = File.OpenOutput(Dir,filename_,False)
 	ou.WriteBytes(Data,0,Data.Length)
 	ou.Close
 	
 	Dim b2 As Bitmap
-	b2.InitializeResize(File.DirInternal,filename_,150%x,150%y,True)
+	b2.InitializeResize(Dir,filename_,150%x,150%y,True)
 	
 	If IsFrontCamera = False Then
 		b2	=	RotateBitmap(b2,90)
@@ -661,9 +665,9 @@ Private Sub gpu_PictureTaken (Data() As Byte)
 	End If
 		
 	If SubExists(modue,evt & "_result2") Then
-		CallSubDelayed3(modue,evt & "_Result2",File.DirInternal,filename_)
+		CallSubDelayed3(modue,evt & "_Result2",Dir,filename_)
 	Else
-		CallSubDelayed2(modue,evt & "_result",LoadBitmap(File.DirInternal,filename_))
+		CallSubDelayed2(modue,evt & "_result",LoadBitmap(Dir,filename_))
 	End If
 	
 End Sub
@@ -744,19 +748,19 @@ Private Sub ion_Event (MethodName As String, Args() As Object) As Object
 	
 End Sub
 
-Public Sub Crop2(Dir As String, Filename As String)
+Public Sub Crop2(Dir_ As String, Filename As String)
 	
-	CurrentDirCrop		=	Dir
+	CurrentDirCrop		=	Dir_
 	CurrentFilenameCrop	=	Filename
 	
 	Dim p As Phone
 	Dim u As Object
 	If p.SdkVersion < 24 Then
 		Dim uri As Uri
-		uri.Parse("file://" & File.Combine(Dir, Filename))
+		uri.Parse("file://" & File.Combine(Dir_, Filename))
 		u = uri
 	Else
-		u = CreateFileProviderUri(Dir, Filename)
+		u = CreateFileProviderUri(Dir_, Filename)
 	End If
 	
 	Dim i As Intent
@@ -804,13 +808,13 @@ Private Sub crop_Event (MethodName As String, Args() As Object) As Object
 	
 End Sub
 
-Private Sub CreateFileProviderUri (Dir As String, FileName As String) As Object
+Private Sub CreateFileProviderUri (Dir_ As String, FileName As String) As Object
 	Dim FileProvider As JavaObject
 	Dim context As JavaObject
 	context.InitializeContext
 	FileProvider.InitializeStatic("android.support.v4.content.FileProvider")
 	Dim f As JavaObject
-	f.InitializeNewInstance("java.io.File", Array(Dir, FileName))
+	f.InitializeNewInstance("java.io.File", Array(Dir_, FileName))
 	Return FileProvider.RunMethod("getUriForFile", Array(context, Application.PackageName & ".provider", f))
 End Sub
 
@@ -825,26 +829,36 @@ Private Sub GetBA As Object
 	Return jo.GetField("processBA")
 End Sub
 
-Private Sub cc_Result (Success As Boolean, Dir As String, FileName As String)
+Private Sub cc_Result (Success As Boolean, Dir_ As String, FileName As String)
 	
 	If Success Then
 		
+		sFilename	=	GetFilenameOfPath(FileName) & ".jpg"
+		
 		Try
-			File.Copy(Dir,FileName,File.DirInternal,GetFilenameOfPath(FileName))
+			Dim out As OutputStream
+			out = File.OpenOutput(sDir, sFilename, False)
+			Dim t As Bitmap
+			t = LoadBitmap(Dir_,FileName)
+			If AspectRatioWidth > 0 Then
+				If t.Width > AspectRatioWidth Then
+					t.Resize(AspectRatioWidth,AspectRatioHeight,True).WriteToStream(out, 100, "JPEG")
+				End If
+			Else
+				t.WriteToStream(out, 100, "JPEG")
+			End If
+			out.Close
 		Catch
 			ToastMessageShow("selected file is invalid,try again...",False)
 			Return
 		End Try
-		
-		sDir		=	File.DirInternal
-		sFilename	=	GetFilenameOfPath(FileName)
-		
+
 		If is_crop Then
 			btncropDo_Click
 			Return
 		End If
 		
-		img.Bitmap	=	LoadBitmapResize(File.DirInternal,sFilename,img.Width,img.Height,True)
+		img.Bitmap	=	LoadBitmapResize(Dir_,sFilename,img.Width,img.Height,True)
 		
 		pnlImage.Visible	=	True
 		
@@ -864,13 +878,13 @@ Private Sub btncrop_Click
 		SaveBitmap(temp,sDir,sFilename,100)
 	End If
 	
-	SaveBitmap(temp,File.DirInternal,tempImageFile,quality2)
+	SaveBitmap(temp,sDir,tempImageFile,quality2)
 	
 	If SubExists(modue,evt & "_Result2") Then
-		CallSub3(modue,evt & "_Result2",File.DirInternal, tempImageFile)
+		CallSub3(modue,evt & "_Result2",sDir, tempImageFile)
 					
 	Else
-		CallSubDelayed2(modue,evt & "_result",FixOrientation(File.DirInternal, tempImageFile))
+		CallSubDelayed2(modue,evt & "_result",FixOrientation(sDir, tempImageFile))
 					
 	End If
 	
@@ -915,46 +929,46 @@ Public Sub ResizeBitmap(Original As Bitmap, Width As Int, Height As Int) As Bitm
 	Return new
 End Sub
 
-Public Sub ResizePicture(Dir As String, Filename As String, OutputFilename As String,Width As Int,Height As Int)
+Public Sub ResizePicture(Dir_ As String, Filename As String, OutputFilename As String,Width As Int,Height As Int)
 	Dim new,Original As Bitmap
-	Original = LoadBitmap(Dir,Filename)
+	Original = LoadBitmap(Dir_,Filename)
 	new.InitializeMutable(Width, Height)
 	Dim c As Canvas
 	c.Initialize2(new)
 	Dim destRect As Rect
 	destRect.Initialize(0, 0, Width, Height)
 	c.DrawBitmap(Original, Null, destRect)
-	SaveBitmap(new,Dir,OutputFilename,70)
+	SaveBitmap(new,Dir_,OutputFilename,70)
 End Sub
 
 'save picture with jpeg format
-Public Sub SaveBitmap(Bitmap As Bitmap,Dir As String,Filename As String,Quality As Int)
+Public Sub SaveBitmap(Bitmap As Bitmap,Dir_ As String,Filename As String,Quality As Int)
 	Dim b1 As Bitmap
 	Dim out As OutputStream
 	b1 = Bitmap
-	out = File.OpenOutput(Dir,Filename,False)
+	out = File.OpenOutput(Dir_,Filename,False)
 	b1.WriteToStream(out,Quality,"JPEG")
 	out.Close
 End Sub
 
 'quality is between 1 and 100
 'format is JPEG,PNG
-Public Sub SaveBitmap3(Bitmap As Bitmap,Dir As String,Filename As String,Format As String,quality As Int)
+Public Sub SaveBitmap3(Bitmap As Bitmap,Dir_ As String,Filename As String,Format As String,quality As Int)
 	Dim b1 As Bitmap
 	Dim out As OutputStream
 	b1 = Bitmap
-	out = File.OpenOutput(Dir,Filename,False)
+	out = File.OpenOutput(Dir_,Filename,False)
 	b1.WriteToStream(out,quality,Format.ToUpperCase)
 	out.Close
 End Sub
 
 'save picture with png format
-Public Sub SaveBitmap2(Bitmap As Bitmap,Dir As String,Filename As String)
+Public Sub SaveBitmap2(Bitmap As Bitmap,Dir_ As String,Filename As String)
 	Dim b1 As Bitmap
 	Dim out As OutputStream
 	b1 = Bitmap
 	out = File.OpenOutput(Dir,Filename,False)
-	b1.WriteToStream(out,100,"PNG")
+	b1.WriteToStream(out,Dir_,"PNG")
 	out.Close
 End Sub
 
@@ -1007,13 +1021,13 @@ Private Sub DrawRoundBitmap (cvs As Canvas, bmp As Bitmap)
 	cvs.DrawBitmap(bmp, Null, r)
 End Sub
 
-Private Sub FixOrientation(Dir As String,Filename As String) As Bitmap
+Private Sub FixOrientation(Dir_ As String,Filename As String) As Bitmap
 	
 	Dim temp As Bitmap
 	Dim degree As Float
 	
 	Dim exif As ExifData
-	exif.Initialize(Dir,Filename)
+	exif.Initialize(Dir_,Filename)
 
 	Select exif.getAttribute(exif.TAG_ORIENTATION)
 		Case exif.ORIENTATION_ROTATE_180
@@ -1027,7 +1041,7 @@ Private Sub FixOrientation(Dir As String,Filename As String) As Bitmap
 				
 	End Select
 	
-	temp = LoadBitmap(Dir,Filename)
+	temp = LoadBitmap(Dir_,Filename)
 	
 	If degree <> 0 Then
 		temp = RotateBitmap(temp,degree)
@@ -1075,3 +1089,9 @@ Private Sub GetFilenameOfPath(fullpath As String) As String
 	End Try
 End Sub
 #End If
+
+Public Sub SetOverride(Width As Int,Height As Int) As PictureChooser
+	RatioWidth	=	Width
+	RatioHeight	=	Height
+	Return Me
+End Sub
