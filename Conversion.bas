@@ -932,19 +932,27 @@ End Sub
 Sub ConvertMillisecondsToString(t As Long,DaySeprator As String,HourSeprator As String,MinuteSeprator As String,SecondSeprator As String) As String
 	
 	Try
+		
 		Dim DayS,HourS, MinuteS, SecondS As Int
 		DayS = t / DateTime.TicksPerDay
 		HourS = t / DateTime.TicksPerHour
 		MinuteS = (t Mod DateTime.TicksPerHour) / DateTime.TicksPerMinute
 		SecondS = (t Mod DateTime.TicksPerMinute) / DateTime.TicksPerSecond
 		
-		If HourS < 1 And MinuteS > 0 Then
-			Return $"${MinuteS}${MinuteSeprator}$2.0{SecondS}${SecondSeprator}"$
-		Else If HourS < 1 And MinuteS < 1 Then
-			Return $"${SecondS}${SecondSeprator}"$
-		Else
-			Return $"$1.0{HourS}${HourSeprator}$2.0{MinuteS}${MinuteSeprator}$2.0{SecondS}${SecondSeprator}"$
+		Dim sDay As String
+		If DayS > 0 Then
+			sDay = $"$1.0{DayS}${DaySeprator}"$
 		End If
+		
+		Dim sHour As String
+		If HourS > 0 Then
+			sHour = $"$1.0{HourS}${HourSeprator}"$
+		End If
+		
+		Dim res As String
+		res = $"${sDay}${sHour}$2.0{MinuteS}${MinuteSeprator}$2.0{SecondS}${SecondSeprator}"$
+		
+		Return res
 		
 	Catch
 		Return ""
