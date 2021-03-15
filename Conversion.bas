@@ -949,8 +949,22 @@ Sub ConvertMillisecondsToString(t As Long,DaySeprator As String,HourSeprator As 
 			sHour = $"$1.0{HourS}${HourSeprator}"$
 		End If
 		
+		Dim sMinute As String
+		If MinuteS > 0 Then
+			sMinute = $"$1.0{MinuteS}${MinuteSeprator}"$
+		End If
+		
+		Dim sSecond As String
+		If SecondS > 0 Then
+			sSecond = $"$1.0{SecondS}${SecondSeprator}"$
+		End If
+		
 		Dim res As String
-		res = $"${sDay}${sHour}$2.0{MinuteS}${MinuteSeprator}$2.0{SecondS}${SecondSeprator}"$
+		res = $"${sDay}${sHour}${sMinute}${sSecond}"$
+		
+		If res.EndsWith(":") Then
+			res = res.SubString2(0,res.Length-1)
+		End If
 		
 		Return res
 		
@@ -1271,5 +1285,15 @@ Public Sub RemoveArabicCharacter(Text As String) As String
 	Text	=	Text.Replace("ي","ی")
 
 	Return Text
+	
+End Sub
+
+Sub Bitmap2Base64(Bitmap As Bitmap) As String
+	
+	Dim su As StringUtils
+	Dim out As OutputStream
+	out.InitializeToBytesArray(0)
+	Bitmap.WriteToStream(out, 100, "JPEG")
+	Return su.EncodeBase64(out.ToBytesArray)
 	
 End Sub

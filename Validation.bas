@@ -297,13 +297,6 @@ Sub IsActivity(v As View) As Boolean
     End Try
 End Sub
 
-#IgnoreWarnings: 12
-Sub ParseInt(Str As String) As Int
-	Dim int2 As Int
-	int2 = Str
-	Return int2
-End Sub
-
 Sub ParseBoolean(Number As String) As Boolean
 	
 	If Number	=	"1" Then
@@ -406,5 +399,28 @@ Sub IssetIndex(List2 As List,Index As Int)
 	Next
 	
 	Return False
+	
+End Sub
+
+Sub IsPicture(Dir As String,Filename As String) As Boolean
+	
+	Try
+		LoadBitmapResize(Dir,Filename,10,10,True)
+		Return True
+	Catch
+		Return False
+	End Try
+	
+End Sub
+
+Sub ParseInt(Data As String) As Int
+	
+	Try
+		Dim i As Int
+		i = Data
+		Return i
+	Catch
+		Return 0
+	End Try
 	
 End Sub

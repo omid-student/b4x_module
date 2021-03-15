@@ -63,7 +63,9 @@ End Sub
 Sub List2Json(List2 As List) As String
 	Dim Js As JSONGenerator
 	Js.Initialize2(List2)
-	Return Js.ToString
+	Dim s As String
+	s = Js.ToString
+	Return s
 End Sub
 
 Public Sub IsJson(Str As String) As Boolean
