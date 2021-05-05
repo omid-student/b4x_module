@@ -1130,6 +1130,7 @@ End Sub
 'date format have to be yyyy/mm/dd
 Public Sub GregorianToPersian2(Date As String,Seprator As String,ResultAsArray As Boolean) As Object
 	
+	Date = TranslateNumber(Date,False)
 	Date	=	Date.Replace("-","/")
 	
 	Dim res() As String

@@ -104,6 +104,11 @@ Public Sub ChooseFromGallery
 	media.SelectFromPhotoLibrary(p2.RootPanel,media.TYPE_IMAGE)
 End Sub
 
+Public Sub ChooseVideoFromGallery
+	media.Initialize("camera",p2)
+	media.SelectFromPhotoLibrary(p2.RootPanel,media.TYPE_MOVIE)
+End Sub
+
 'Output picture is JPG
 Public Sub ChooseFromCamera
 	media.Initialize("camera",p2)
@@ -144,12 +149,13 @@ Public Sub Hide
 End Sub
 
 Private Sub camera_Complete (Success As Boolean, Image As Bitmap, VideoPath As String)
-
+	
 	If Success Then
 		
 		If VideoPath = "" Then
 			
 			If is_crop = True Then
+				Sleep(1500)
 				CropBitmap(Image)
 				Return
 			End If
@@ -168,7 +174,12 @@ Private Sub camera_Complete (Success As Boolean, Image As Bitmap, VideoPath As S
 			End If
 		Else
 			If SubExists(Module1,event & "_result2",2) Then
-				CallSubDelayed3(Module1,event & "_Result2",VideoPath,"")
+				Try
+				File.Copy(VideoPath,"",File.DirLibrary,"a.mp4")
+				Catch
+					Log("here")
+				End Try
+				CallSub3(Module1,event & "_Result2",VideoPath,"")
 			End If
 		End If
 	
@@ -289,7 +300,7 @@ Public Sub CropBitmap(bitmap1 As Bitmap)
 End Sub
 
 Private Sub page1_Resize(Width As Int,Height As Int)
-
+	
 	Dim objImage As Bitmap
 	objImage	=	current_bitmap
    
